@@ -2,11 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
-
-    private void Shoot()
-    {
-
-    }
+    
 }
