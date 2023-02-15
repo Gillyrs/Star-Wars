@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Projectile : ScriptableObject
 {
-    
+    [SerializeField] private float speed;
 }
