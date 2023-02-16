@@ -2,7 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : ScriptableObject
+public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    private ProjectileData projectileData;
+
+    public void ConfigureProjectile(ProjectileData projectileData)
+    {
+        this.projectileData = projectileData;
+    }
 }

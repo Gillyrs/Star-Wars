@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IObjectPool
 {
-    void Instantiate(Vector2 position, Quaternion quaternion);
+    public GameObject Prefab { get; set; }
+    GameObject Instantiate(Vector2 position, Quaternion quaternion);
 }

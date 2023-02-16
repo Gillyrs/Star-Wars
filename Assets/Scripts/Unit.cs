@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private Projectile projectile;
+    [SerializeField] private ProjectileData projectile;
     private void Shoot()
     {
 
