@@ -11,7 +11,7 @@ public class Weapon : MonoBehaviour
     private IObjectPool projectilePool;
     private GameObject projectilePrefab;
 
-    private void Awake()
+    private void Start()
     {
         projectilePrefab = projectile.gameObject;
         projectilePool = ObjectPoolSpawner.GetObjectPool(projectilePrefab);
@@ -20,6 +20,8 @@ public class Weapon : MonoBehaviour
     public void Shoot()
     {
         var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
-        projectile.GetComponent<Rigidbody2D>().AddForce(transform.forward);
+        var rigidBody = projectile.GetComponent<Rigidbody2D>();
+        rigidBody.AddForce(transform.right * projectileData.Speed, ForceMode2D.Impulse);
+        Debug.Log("Shooted");
     }
 }

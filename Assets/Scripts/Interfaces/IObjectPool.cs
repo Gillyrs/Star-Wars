@@ -6,4 +6,5 @@ public interface IObjectPool
 {
     public GameObject Prefab { get; set; }
     GameObject Instantiate(Vector2 position, Quaternion quaternion);
+    void Destroy(GameObject poolObject);
 }

@@ -5,7 +5,7 @@ using System;
 
 public class ObjectPool : MonoBehaviour, IObjectPool
 {
-    [SerializeField] private GameObject poolPrefab;
+    public GameObject Prefab { get; set; }
     [SerializeField] private List<GameObject> poolObjects = new List<GameObject>();
     private bool isInitialized = false;
     public void InitObjects(GameObject poolPrefab, int count)
@@ -13,7 +13,7 @@ public class ObjectPool : MonoBehaviour, IObjectPool
         if (isInitialized == true)
             throw new NotImplementedException();
         isInitialized = true;
-        this.poolPrefab = poolPrefab;
+        Prefab = poolPrefab;
         for (int i = 0; i < count; i++)
         {
             var poolObject = Instantiate(poolPrefab, transform);
@@ -22,8 +22,19 @@ public class ObjectPool : MonoBehaviour, IObjectPool
         }       
     }
 
-    public void Instantiate(Vector2 position, Quaternion quaternion)
+    public GameObject Instantiate(Vector2 position, Quaternion quaternion)
     {
-        
+        var poolObject = poolObjects[0];
+        poolObjects.RemoveAt(0);
+        poolObject.transform.position = position;
+        poolObject.transform.rotation = quaternion;
+        poolObject.SetActive(true);
+        return poolObject;
+    }
+
+    public void Destroy(GameObject poolObject)
+    {
+        poolObject.SetActive(false);
+        poolObjects.Add(poolObject);
     }
 }

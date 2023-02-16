@@ -7,12 +7,13 @@ using UnityEngine;
 public class ObjectPoolSpawner : MonoBehaviour
 {
     [SerializeField] private ObjectPoolRegister prefabRegister;
-    private static List<IObjectPool> objectPools = new List<IObjectPool>();
+    private static List<IObjectPool> objectPools = new();
     public static IObjectPool GetObjectPool(GameObject prefab)
     {
         var objectPool = from pool in objectPools
                          where pool.Prefab == prefab
                          select pool;
+        Debug.Log(objectPool.ToArray().Length);
         return objectPool.ToArray()[0];
     }
     private void Awake()
@@ -28,6 +29,8 @@ public class ObjectPoolSpawner : MonoBehaviour
             var component = pool.AddComponent<ObjectPool>();
             component.InitObjects(prefab, prefabRegister.Numbers[i]);
             objectPools.Add(component);
+            Debug.Log(objectPools);
+            Debug.Log(objectPools[i].Prefab);
         }
     }
 }
