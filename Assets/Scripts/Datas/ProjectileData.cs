@@ -8,3 +8,4 @@ public class ProjectileData : ScriptableObject
     public float Speed;
 
 }
+
