@@ -25,9 +25,9 @@ public class ObjectPoolSpawner : MonoBehaviour
         for (int i = 0; i < prefabRegister.Prefabs.Count; i++)
         {
             var prefab = prefabRegister.Prefabs[i];
-            var pool = new GameObject(prefab.name + " ObjectPool");
+            var pool = new GameObject(prefab.Prefab.name + " ObjectPool");
             var component = pool.AddComponent<ObjectPool>();
-            component.InitObjects(prefab, prefabRegister.Numbers[i]);
+            component.InitObjects(prefab.Prefab, prefab.Count);
             objectPools.Add(component);
             Debug.Log(objectPools);
             Debug.Log(objectPools[i].Prefab);

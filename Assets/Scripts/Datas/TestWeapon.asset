@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25a405fa630c2f94ab2180696ca353d3, type: 3}
   m_Name: TestWeapon
   m_EditorClassIdentifier: 
-  accuracy: 0
-  projectileSpreading: 0
-  reloadTime: 0
-  shootCooldown: 0
-  machineQueue: 0
+  accuracy: 5
+  projectileSpreading: 0.565
+  reloadTime: 850
+  shootCooldown: 215
+  machineQueue: 24

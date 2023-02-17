@@ -8,7 +8,7 @@ public class WeaponData : ScriptableObject
     [Tooltip("Percantage that projectile will reach target")]
     [Range(0, 100)]
     [SerializeField] private float accuracy;
-    [Range(0, 1)]
+    [Range(0, 3)]
     [SerializeField] private float projectileSpreading;
     [Tooltip("Time between machine queues in miliseconds")]
     [SerializeField] private int reloadTime;
