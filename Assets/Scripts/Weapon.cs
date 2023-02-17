@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using static UnityEngine.GraphicsBuffer;
 
 public class Weapon : MonoBehaviour
@@ -13,6 +14,8 @@ public class Weapon : MonoBehaviour
     private GameObject projectilePrefab;
     private Rigidbody2D rb;
     private WeaponDataSctructure weaponData;
+    private bool isShooting = false;
+    private bool isReloaded = true;
 
     private void Start()
     {
@@ -26,12 +29,27 @@ public class Weapon : MonoBehaviour
         this.weaponData = weaponData.GetWeaponData();
     }
 
-    public void Shoot()
+    public async void Shoot()
     {
-        var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
-        var rigidBody = projectile.GetComponent<Rigidbody2D>();
-        rigidBody.rotation = rb.rotation;
-        rigidBody.AddForce(transform.right * projectileData.Speed, ForceMode2D.Impulse);
+        if (isShooting || isReloaded == false)
+            return;
+        isShooting = true;
+        for (int i = 0; i < weaponData.machineQueue; i++)
+        {
+            await UniTask.Delay(weaponData.shootCooldown);
+            var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
+            var rigidBody = projectile.GetComponent<Rigidbody2D>();
+            rigidBody.rotation = rb.rotation;
+            rigidBody.AddForce(transform.right * projectileData.Speed
+                + new Vector3(0, Random.Range(-weaponData.projectileSpreading, weaponData.projectileSpreading)),
+                ForceMode2D.Impulse);
+            isReloaded = false;
+        }
+        isShooting = false;
+        await UniTask.Delay(weaponData.reloadTime);
+        isReloaded = true;
+
+
     }
 
     public void Rotate(Transform target)
