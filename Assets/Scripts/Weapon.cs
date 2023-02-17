@@ -34,19 +34,23 @@ public class Weapon : MonoBehaviour
         if (isShooting || isReloaded == false)
             return;
         isShooting = true;
-        for (int i = 0; i < weaponData.machineQueue; i++)
+        for (int i = 0; i < weaponData.MachineQueue; i++)
         {
-            await UniTask.Delay(weaponData.shootCooldown);
+            await UniTask.Delay(weaponData.ShootCooldown);
+
             var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
+            var projectileComponent = projectile.GetComponent<Projectile>();
+            projectileComponent.InitStats(projectileData);
+            projectileComponent.OnLifeTimeEnded += (projectile) => projectilePool.Destroy(projectile.gameObject);
             var rigidBody = projectile.GetComponent<Rigidbody2D>();
             rigidBody.rotation = rb.rotation;
-            rigidBody.AddForce(transform.right * projectileData.Speed
-                + new Vector3(0, Random.Range(-weaponData.projectileSpreading, weaponData.projectileSpreading)),
+            rigidBody.AddForce(transform.right * projectileComponent.ProjectileData.Speed
+                + new Vector3(0, Random.Range(-weaponData.ProjectileSpreading, weaponData.ProjectileSpreading)),
                 ForceMode2D.Impulse);
             isReloaded = false;
         }
         isShooting = false;
-        await UniTask.Delay(weaponData.reloadTime);
+        await UniTask.Delay(weaponData.ReloadTime);
         isReloaded = true;
 
 

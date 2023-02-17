@@ -25,19 +25,19 @@ public class WeaponData : ScriptableObject
 
 public struct WeaponDataSctructure
 {
-    public float accuracy;
-    public float projectileSpreading;
-    public int reloadTime;
-    public int shootCooldown;
-    public int machineQueue;
+    public float Accuracy;
+    public float ProjectileSpreading;
+    public int ReloadTime;
+    public int ShootCooldown;
+    public int MachineQueue;
 
     public WeaponDataSctructure(float accuracy, float projectileSpreading,
                                 int reloadTime, int shootCooldown, int machineQueue)
     {
-        this.accuracy = accuracy;
-        this.projectileSpreading = projectileSpreading;
-        this.reloadTime = reloadTime;
-        this.shootCooldown = shootCooldown;
-        this.machineQueue = machineQueue;
+        Accuracy = accuracy;
+        ProjectileSpreading = projectileSpreading;
+        ReloadTime = reloadTime;
+        ShootCooldown = shootCooldown;
+        MachineQueue = machineQueue;
     }
 }
