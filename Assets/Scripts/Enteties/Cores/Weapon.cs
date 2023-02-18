@@ -2,20 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using static UnityEngine.GraphicsBuffer;
+using Random = UnityEngine.Random;
+
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] private Projectile projectile;
-    [SerializeField] private ProjectileData projectileData;
+    public bool isStopped;
+    [SerializeField] private Projectile projectile;    
     [SerializeField] private Transform firePosition;
+    private ProjectileData projectileData;
     private IObjectPool projectilePool;
     private GameObject projectilePrefab;
     private Rigidbody2D rb;
     private WeaponDataSctructure weaponData;
     private bool isShooting = false;
     private bool isReloaded = true;
+    
 
     private void Start()
     {
@@ -24,18 +30,21 @@ public class Weapon : MonoBehaviour
         projectilePool = ObjectPoolSpawner.GetObjectPool(projectilePrefab);
     }
 
-    public void InitStats(WeaponData weaponData)
+    public void InitStats(WeaponData weaponData, ProjectileData projectileData)
     {
         this.weaponData = weaponData.GetWeaponData();
+        this.projectileData = projectileData;
     }
 
-    public async void Shoot()
+    public async UniTask Shoot()
     {
         if (isShooting || isReloaded == false)
             return;
         isShooting = true;
         for (int i = 0; i < weaponData.MachineQueue; i++)
         {
+            if(isStopped)
+                return;
             await UniTask.Delay(weaponData.ShootCooldown);
 
             var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
@@ -56,17 +65,17 @@ public class Weapon : MonoBehaviour
 
     }
 
-    public async void Rotate(Transform target, int weaponrotationSpeed)
+    public IEnumerator Rotate(Transform target, float weaponrotationSpeed, Action doneAction)
     {
         Vector2 lookDir = target.position - transform.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-        var rt = angle / 100;
-        for (int i = 0; i < 100; i++)
+
+        while (Mathf.Abs(rb.rotation - angle) > 0.01f)
         {
-            await UniTask.Delay(weaponrotationSpeed);
-            Debug.Log("Rotated");
-            rb.rotation += rt;
+            float step = Mathf.MoveTowardsAngle(rb.rotation, angle, weaponrotationSpeed * Time.deltaTime);
+            rb.rotation = step;
+            yield return null;
         }
-        
+        doneAction();
     }
 }
