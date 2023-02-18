@@ -13,7 +13,5 @@ MonoBehaviour:
   m_Name: Prefab Register
   m_EditorClassIdentifier: 
   Prefabs:
-  - {fileID: 2572394399384178131, guid: 208b797ca40e08245b8a2aee21dc4ec6, type: 3}
-  - {fileID: 6435935982011668355, guid: 584706fff5023b542b6664c52fc4a688, type: 3}
-  - {fileID: 4391847327158294178, guid: 5622d84d4a32ed049ba039868127abd0, type: 3}
-  Numbers: 050000000500000064000000
+  - Prefab: {fileID: 4391847327158294178, guid: 5622d84d4a32ed049ba039868127abd0, type: 3}
+    Count: 200

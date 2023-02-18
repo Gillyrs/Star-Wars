@@ -56,10 +56,17 @@ public class Weapon : MonoBehaviour
 
     }
 
-    public void Rotate(Transform target)
+    public async void Rotate(Transform target, int weaponrotationSpeed)
     {
         Vector2 lookDir = target.position - transform.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
-        rb.rotation = angle;
+        var rt = angle / 100;
+        for (int i = 0; i < 100; i++)
+        {
+            await UniTask.Delay(weaponrotationSpeed);
+            Debug.Log("Rotated");
+            rb.rotation += rt;
+        }
+        
     }
 }

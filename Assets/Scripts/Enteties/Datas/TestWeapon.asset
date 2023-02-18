@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TestWeapon
   m_EditorClassIdentifier: 
   accuracy: 5
-  projectileSpreading: 0.565
+  projectileSpreading: 3
   reloadTime: 850
-  shootCooldown: 215
-  machineQueue: 24
+  shootCooldown: 296
+  machineQueue: 11

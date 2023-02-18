@@ -1,21 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Pathfinding;
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private ProjectileData projectile;
-    [SerializeField] private Weapon weapon;
-    [SerializeField] private WeaponData weaponData;
-    [SerializeField] private Transform target;
+    private Weapon weapon;
+    private UnitDataStructure unitData;
 
-    private void Start()
+    public void Init(UnitData unitData, Weapon weapon)
     {
-        weapon.InitStats(weaponData);
+        this.unitData = unitData.GetUnitData();
+        this.weapon = weapon;
     }
 
-    private void FixedUpdate()
-    {
-        weapon.Rotate(target);
-    }
+
 }

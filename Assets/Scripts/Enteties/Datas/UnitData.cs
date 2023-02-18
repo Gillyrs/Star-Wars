@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "Unit Data", menuName = "Datas/Unit Data")]
 public class UnitData : ScriptableObject
 {
     [SerializeField] private int health;
@@ -14,11 +15,13 @@ public class UnitData : ScriptableObject
     [SerializeField] private int armor;
     [Tooltip("Movement speed")]
     [SerializeField] private float speed;
+    [Tooltip("Speed of weapon rotation to target")]
+    [SerializeField] private int weaponRotationSpeed;
 
     public UnitDataStructure GetUnitData()
     {
         return new UnitDataStructure(health, regenerationAmount, regenerationSpeed, 
-                                     regenerationCooldown, armor, speed);
+                                     regenerationCooldown, armor, speed, weaponRotationSpeed);
     }
 }
 
@@ -30,9 +33,10 @@ public struct UnitDataStructure
     public int RegenerationCooldown;
     public int Armor;
     public float Speed;
+    public int WeaponRotationSpeed;
 
     public UnitDataStructure(int health, int regenerationAmount, int regenerationSpeed, 
-                             int regenerationCooldown int armor, float speed)
+                             int regenerationCooldown, int armor, float speed, int weaponRotationSpeed)
     {
         Health = health;
         RegenerationAmount = regenerationAmount;
@@ -40,5 +44,6 @@ public struct UnitDataStructure
         RegenerationCooldown = regenerationCooldown;
         Armor = armor;
         Speed = speed;
+        WeaponRotationSpeed = weaponRotationSpeed;
     }
 }
