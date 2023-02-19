@@ -13,7 +13,6 @@ public class ObjectPoolSpawner : MonoBehaviour
         var objectPool = from pool in objectPools
                          where pool.Prefab == prefab
                          select pool;
-        Debug.Log(objectPool.ToArray().Length);
         return objectPool.ToArray()[0];
     }
     private void Awake()

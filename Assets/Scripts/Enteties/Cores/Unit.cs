@@ -5,6 +5,7 @@ using Pathfinding;
 using System;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class Unit : MonoBehaviour, IDamageable
 {
@@ -14,10 +15,9 @@ public class Unit : MonoBehaviour, IDamageable
     private Team myTeam;
     private Weapon weapon;
     private UnitDataStructure unitData;
-    [SerializeField] private bool isBusy = false;
-
+    private bool isBusy = false;
     public void Init(UnitData unitData, Weapon weapon, Team team)
-    {
+    {        
         this.unitData = unitData.GetUnitData();
         this.weapon = weapon;
         myTeam = team;
@@ -34,29 +34,26 @@ public class Unit : MonoBehaviour, IDamageable
     }
     private void OnEnemyNoticed(Unit target)
     {
-        Debug.Log("Enemy noticed");
         if (target.TeamEquals(myTeam) || target.gameObject.activeSelf == false)
             return;
         if (isBusy)
         {
+            if (targetsQueue.Contains(target))
+                return;
             targetsQueue.Add(target);
+            target.OnUnitDestroyed += OnTargetInQueueDestroyed;
             return;
         }
         isBusy = true;
+        weapon.isStopped = false;
         target.OnUnitDestroyed += OnTargetDestroyed;
-        StartCoroutine(weapon.Rotate(target.transform, unitData.WeaponRotationSpeed,
-                                     async () =>
-                                     { 
-                                         while (isBusy == true && gameObject.activeSelf == true)
-                                         {
-                                             await weapon.Shoot();
-                                             if (isBusy == false) break;
-                                         }
-                                             
-                                     } ));
+        StartCoroutine(weapon.Rotate(target.transform, unitData.WeaponRotationSpeed));
     }
+
     private void OnTargetDestroyed(Unit unit)
     {
+        weapon.ResetStates();
+        weapon.isStopped = true;
         unit.OnUnitDestroyed -= OnTargetDestroyed;
         targetsQueue.Remove(unit);
         isBusy = false;
@@ -64,13 +61,18 @@ public class Unit : MonoBehaviour, IDamageable
         if (newTarget != null)
             OnEnemyNoticed(newTarget);
     }
+    
+    private void OnTargetInQueueDestroyed(Unit unit)
+    {
+        targetsQueue.Remove(unit);
+    }
     private Unit CheckTargets()
     {
         if (targetsQueue.Count > 0)
         {
-            Debug.Log("From Queue");
             var target = targetsQueue[0];
             targetsQueue.RemoveAt(0);
+            target.OnUnitDestroyed -= OnTargetInQueueDestroyed;
             return target;
         }
         return null;
@@ -79,7 +81,8 @@ public class Unit : MonoBehaviour, IDamageable
     private async void OnEnable()
     {
         await UniTask.Delay(100);
-        weapon.isStopped = false;
+        weapon.ResetStates();
+        weapon.OnCanShoot += weapon.Shoot;
         attackRadius.OnTrigerEnter += (Collider2D colider) =>
         {
             if (colider.TryGetComponent(out TriggerDetector detector) == true)
@@ -90,6 +93,7 @@ public class Unit : MonoBehaviour, IDamageable
     private void OnDisable()
     {
         weapon.isStopped = true;
+        weapon.OnCanShoot -= weapon.Shoot;
         OnUnitDestroyed?.Invoke(this);
         isBusy = false;
         targetsQueue.Clear();

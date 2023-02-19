@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892917473498081}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.228092, y: -2.3656573, z: 0.000575874}
+  m_LocalPosition: {x: -1.924, y: -1.522, z: 0.000575874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRadius: {fileID: 3989892917589802081}
+  targetsQueue: []
 --- !u!1 &3989892917589802094
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,6 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 154b31fd6a12d5a4badfb1d91e2ab314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStopped: 0
   projectile: {fileID: 855007886246829127, guid: 5622d84d4a32ed049ba039868127abd0, type: 3}
   firePosition: {fileID: 3989892919162460386}
 --- !u!50 &3989892919063521992
