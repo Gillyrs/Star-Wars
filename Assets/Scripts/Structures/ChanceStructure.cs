@@ -14,7 +14,7 @@ public struct ChanceStructure
         if (chances.Length != bools.Length)
             throw new ArgumentException();
         this.chances = chances;
-        this.miss = bools;
+        miss = bools;
         Count = chances.Length;
     }
     public int GetChance(int index)

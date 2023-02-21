@@ -27,9 +27,8 @@ public class Weapon : MonoBehaviour
     [SerializeField]  private Team myTeam;
     [SerializeField] private List<Detector> myEntityDetectors;
 
-    private void Start()
-    {
-        chance = new Chance(new ChanceStructure(new int[] { weaponData.Accuracy, 20 }, new bool[] { true, false }));
+    private void Awake()
+    {       
         rb = GetComponent<Rigidbody2D>();
         projectilePrefab = projectile.gameObject;
         projectilePool = ObjectPoolSpawner.GetObjectPool(projectilePrefab);
@@ -39,8 +38,21 @@ public class Weapon : MonoBehaviour
     {
         this.weaponData = weaponData.GetWeaponData();
         this.projectileData = projectileData;
+
+        chance = new Chance(new ChanceStructure(new int[] 
+        { 
+        this.weaponData.Accuracy,
+        100 - this.weaponData.Accuracy 
+        }, 
+        new bool[] { true, false }));
+
         myEntityDetectors = detectors;
         myTeam = team;
+        if (myTeam == Team.SecondTeam)
+        {
+            transform.localPosition += new Vector3(transform.localPosition.x, 0);
+            rb.rotation = 180;
+        }
     }
 
     public void ResetStates()
