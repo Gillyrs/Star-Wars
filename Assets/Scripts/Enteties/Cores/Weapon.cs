@@ -8,6 +8,7 @@ using Cysharp.Threading.Tasks;
 using static UnityEngine.GraphicsBuffer;
 using Random = UnityEngine.Random;
 using System.Threading;
+using UnityTools;
 
 public class Weapon : MonoBehaviour
 {
@@ -22,20 +23,24 @@ public class Weapon : MonoBehaviour
     private WeaponDataSctructure weaponData;
     private bool isShooting = false;
     private bool isReloaded = true;
-    
-
+    private Chance chance;
+    [SerializeField]  private Team myTeam;
+    [SerializeField] private List<Detector> myEntityDetectors;
 
     private void Start()
     {
+        chance = new Chance(new ChanceStructure(new int[] { weaponData.Accuracy, 20 }, new bool[] { true, false }));
         rb = GetComponent<Rigidbody2D>();
         projectilePrefab = projectile.gameObject;
         projectilePool = ObjectPoolSpawner.GetObjectPool(projectilePrefab);
     }
 
-    public void InitStats(WeaponData weaponData, ProjectileData projectileData)
+    public void InitStats(WeaponData weaponData, ProjectileData projectileData, List<Detector> detectors, Team team)
     {
         this.weaponData = weaponData.GetWeaponData();
         this.projectileData = projectileData;
+        myEntityDetectors = detectors;
+        myTeam = team;
     }
 
     public void ResetStates()
@@ -55,18 +60,16 @@ public class Weapon : MonoBehaviour
             if(isStopped)
                 return;
             await UniTask.Delay(weaponData.ShootCooldown);
-
+             
             var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
             var projectileComponent = projectile.GetComponent<Projectile>();
-            projectileComponent.InitStats(projectileData);
+            projectileComponent.InitStats(projectileData, chance.Spin(), myEntityDetectors, myTeam);
             projectileComponent.OnLifeTimeEnded += (projectile) => 
             {
                 projectile.ClearAllSubsribations();
                 projectilePool.Destroy(projectile.gameObject);
             };
-            var rigidBody = projectile.GetComponent<Rigidbody2D>();
-            rigidBody.rotation = rb.rotation;
-            rigidBody.AddForce(transform.right * projectileComponent.ProjectileData.Speed
+            projectileComponent.Rb.AddForce(transform.right * projectileComponent.ProjectileData.Speed
                 + new Vector3(0, Random.Range(-weaponData.ProjectileSpreading, weaponData.ProjectileSpreading)),
                 ForceMode2D.Impulse);
             isReloaded = false;

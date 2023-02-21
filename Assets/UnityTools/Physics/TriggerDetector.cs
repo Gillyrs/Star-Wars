@@ -1,39 +1,18 @@
 using System;
 using UnityEngine;
-
+using NaughtyAttributes;
 /// <summary>
 /// Calls events and passes colliders as arguments if some of the messages call
 /// </summary>
-public class TriggerDetector : MonoBehaviour
+public class TriggerDetector : Detector
 {
-    public event Action<Collider2D> OnTrigerEnter;
-    public event Action<Collider2D> OnTrigerStay;
-    public event Action<Collider2D> OnTrigerExit;
-    [SerializeField] private Unit myUnit;
-
-    public Unit GetMyUnit()
+    private void OnTriggerEnter2D(Collider2D collider)
     {
-        return myUnit;
+        InvokeOnColliderEnter(collider);
     }
-
-    public void ClearAllSubsribations()
+    private void OnTriggerExit2D(Collider2D collider)
     {
-        OnTrigerEnter = null;
-        OnTrigerStay = null;
-        OnTrigerExit = null;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        OnTrigerEnter?.Invoke(collision);
-    }
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        OnTrigerStay?.Invoke(collision);
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        OnTrigerExit?.Invoke(collision);
+        InvokeOnColliderExit(collider);
     }
 }
 

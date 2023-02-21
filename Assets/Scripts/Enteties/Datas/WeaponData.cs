@@ -7,7 +7,7 @@ public class WeaponData : ScriptableObject
 {
     [Tooltip("Percantage that projectile will reach target")]
     [Range(0, 100)]
-    [SerializeField] private float accuracy;
+    [SerializeField] private int accuracy;
     [Range(0, 3)]
     [SerializeField] private float projectileSpreading;
     [Tooltip("Time between machine queues in miliseconds")]
@@ -25,13 +25,13 @@ public class WeaponData : ScriptableObject
 
 public struct WeaponDataSctructure
 {
-    public float Accuracy;
+    public int Accuracy;
     public float ProjectileSpreading;
     public int ReloadTime;
     public int ShootCooldown;
     public int MachineQueue;
 
-    public WeaponDataSctructure(float accuracy, float projectileSpreading,
+    public WeaponDataSctructure(int accuracy, float projectileSpreading,
                                 int reloadTime, int shootCooldown, int machineQueue)
     {
         Accuracy = accuracy;

@@ -17,5 +17,12 @@ namespace UnityTools
 
             return materials.ToArray();
         }
+
+        public static bool TryGetComponentInChildren<T>(this GameObject gameObject, out T item)
+            where T : MonoBehaviour
+        {
+            item = gameObject.GetComponentInChildren<T>();
+            return item != null;
+        }
     }
 }

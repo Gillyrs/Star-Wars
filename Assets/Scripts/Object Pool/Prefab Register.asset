@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Prefab Register
   m_EditorClassIdentifier: 
   Prefabs:
-  - Prefab: {fileID: 4391847327158294178, guid: 5622d84d4a32ed049ba039868127abd0, type: 3}
-    Count: 200
+  - Prefab: {fileID: 4391847327158294178, guid: dbc80e417707f6b4e93ee6aea1257869, type: 3}
+    Count: 500

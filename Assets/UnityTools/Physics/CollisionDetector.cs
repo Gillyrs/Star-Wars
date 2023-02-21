@@ -4,22 +4,14 @@ using UnityEngine;
 /// <summary>
 /// Calls events and passes collisions as arguments if some of the messages call
 /// </summary>
-public class CollisionDetector : MonoBehaviour
+public class CollisionDetector : Detector
 {
-    public event Action<Collision> OnCollisonEnter;
-    public event Action<Collision> OnCollisonStay;
-    public event Action<Collision> OnCollisonExit;
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        OnCollisonEnter?.Invoke(collision);
+        InvokeOnCollisionEnter(collision);
     }
-    private void OnCollisionStay(Collision collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        OnCollisonStay?.Invoke(collision);
-    }
-    private void OnCollisionExit(Collision collision)
-    {
-        OnCollisonExit?.Invoke(collision);
+        InvokeOnCollisionExit(collision);
     }
 }

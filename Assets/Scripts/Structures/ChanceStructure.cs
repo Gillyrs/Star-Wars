@@ -9,12 +9,12 @@ public struct ChanceStructure
     private int[] chances;
     private bool[] miss;
 
-    public ChanceStructure(int[] chances, bool[] actions)
+    public ChanceStructure(int[] chances, bool[] bools)
     {
-        if (chances.Length != actions.Length)
+        if (chances.Length != bools.Length)
             throw new ArgumentException();
         this.chances = chances;
-        this.miss = actions;
+        this.miss = bools;
         Count = chances.Length;
     }
     public int GetChance(int index)

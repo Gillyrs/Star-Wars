@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [CreateAssetMenu(fileName = "Projectile Data", menuName = "Datas/Projectile Data")]
 public class ProjectileData : ScriptableObject
@@ -14,7 +15,7 @@ public class ProjectileData : ScriptableObject
         return new ProjectileDataStructure(speed, lifeTime, damage);
     }
 }
-
+[Serializable]
 public struct ProjectileDataStructure
 {
     public float Speed;
