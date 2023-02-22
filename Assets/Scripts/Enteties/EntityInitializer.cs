@@ -11,11 +11,17 @@ public class EntityInitializer : MonoBehaviour
     [SerializeField] private Team currentSpawnTeam;
     [SerializeField] private Transform enemyBase;
     [SerializeField] private Transform spawnPoint;
+    private IObjectPool entityPool;
+
+    private void Start()
+    {
+        entityPool = ObjectPoolSpawner.GetObjectPool(entityPrefab);
+    }
     public void CreateEntity()
     {
-        var obj = Instantiate(entityPrefab, spawnPoint.position, Quaternion.identity);
+        var obj = entityPool.Instantiate(spawnPoint.position, Quaternion.identity);
         var entity = obj.GetComponent<Entity>();
         var unit = entity.GetUnit();
-        unit.Init(entity, unitData, weaponData, projectileData, currentSpawnTeam, enemyBase);
+        unit.Init(unitData, weaponData, projectileData, currentSpawnTeam, enemyBase);
     }
 }

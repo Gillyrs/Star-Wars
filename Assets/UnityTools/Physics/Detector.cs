@@ -14,17 +14,18 @@ public class Detector : MonoBehaviour
     [ShowIf("HasMember")]
     [SerializeField] private Member member;
 
+    public void ClearAllSubsribations()
+    {
+        OnColliderEnter = null;
+        OnColliderExit = null;
+    }
     public bool TryGetMember(out Member member)
     {
         if (HasMember) member = this.member;
         else member = null;
         return HasMember;
     }
-    public void ClearAllSubsribations()
-    {
-        OnColliderEnter = null;
-        OnColliderExit = null;
-    }
+    
 
     protected void InvokeOnColliderEnter(Collider2D collider) => OnColliderEnter?.Invoke(collider);
     protected void InvokeOnColliderExit(Collider2D collider) => OnColliderEnter?.Invoke(collider);

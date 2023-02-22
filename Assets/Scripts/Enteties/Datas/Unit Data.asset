@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Unit Data
   m_EditorClassIdentifier: 
   health: 100
+  maxHealth: 100
   regenerationAmount: 72
   regenerationSpeed: 59
   regenerationCooldown: 67

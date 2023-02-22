@@ -1,14 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using static UnityEngine.GraphicsBuffer;
 using Random = UnityEngine.Random;
-using System.Threading;
-using UnityTools;
 
 public class Weapon : MonoBehaviour
 {
@@ -16,83 +11,100 @@ public class Weapon : MonoBehaviour
     public event Action OnCanShoot;
     [SerializeField] private Projectile projectile;    
     [SerializeField] private Transform firePosition;
+    [SerializeField] private Team team;
+    [SerializeField] private List<Detector> myEntityDetectors;
+    private bool isShooting = false;
+    private bool isReloaded = true;
+
     private ProjectileData projectileData;
     private IObjectPool projectilePool;
     private GameObject projectilePrefab;
+
     private Rigidbody2D rb;
     private WeaponDataSctructure weaponData;
-    private bool isShooting = false;
-    private bool isReloaded = true;
-    private Chance chance;
-    [SerializeField]  private Team myTeam;
-    [SerializeField] private List<Detector> myEntityDetectors;
-
+    
+    private Chance chance;   
     private void Awake()
     {       
         rb = GetComponent<Rigidbody2D>();
         projectilePrefab = projectile.gameObject;
         projectilePool = ObjectPoolSpawner.GetObjectPool(projectilePrefab);
     }
-
-    public void InitStats(WeaponData weaponData, ProjectileData projectileData, List<Detector> detectors, Team team)
+    public void Init(WeaponData weaponData, ProjectileData projectileData, Team team, List<Detector> detectors)
     {
         this.weaponData = weaponData.GetWeaponData();
         this.projectileData = projectileData;
 
-        chance = new Chance(new ChanceStructure(new int[] 
-        { 
-        this.weaponData.Accuracy,
-        100 - this.weaponData.Accuracy 
-        }, 
-        new bool[] { true, false }));
+        InitChance();
+        InitDetectors(detectors);
+        InitTeam(team);
 
-        myEntityDetectors = detectors;
-        myTeam = team;
-        if (myTeam == Team.SecondTeam)
+        void InitChance()
+        {
+            int[] chances = new int[] { this.weaponData.Accuracy, 100 - this.weaponData.Accuracy };
+            bool[] bools = new bool[] { true, false };
+            chance = new Chance(new ChanceStructure(chances, bools));
+        }
+        void InitDetectors(List<Detector> detectors)
+        {
+            myEntityDetectors = detectors;
+        }
+        void InitTeam(Team team)
+        {
+            this.team = team;
+            if (team == Team.SecondTeam)
+            {
+                FlipTransformAndRotation();
+            }
+        }
+        void FlipTransformAndRotation()
         {
             transform.localPosition += new Vector3(transform.localPosition.x, 0);
             rb.rotation = 180;
         }
-    }
-
-    public void ResetStates()
-    {
-        isShooting = false;
-        isStopped = false;
-        isReloaded = true;
-    }
-
+    }    
+    public void ResetStates(bool isShooting = false, bool isReloaded = true, bool isStopped = false) { }    
     public async void Shoot()
     {
-        if (isShooting || isReloaded == false)
+        if (isShooting || !isReloaded)
             return;
+
         isShooting = true;
+
         for (int i = 0; i < weaponData.MachineQueue; i++)
         {
             if(isStopped)
                 return;
+
             await UniTask.Delay(weaponData.ShootCooldown);
              
             var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
+
             var projectileComponent = projectile.GetComponent<Projectile>();
-            projectileComponent.InitStats(projectileData, chance.Spin(), myEntityDetectors, myTeam);
+            projectileComponent.InitStats(projectileData, chance.Spin(), myEntityDetectors, team);
             projectileComponent.OnLifeTimeEnded += (projectile) => 
             {
                 projectile.ClearAllSubsribations();
                 projectilePool.Destroy(projectile.gameObject);
             };
-            projectileComponent.Rb.AddForce(transform.right * projectileComponent.ProjectileData.Speed
-                + new Vector3(0, Random.Range(-weaponData.ProjectileSpreading, weaponData.ProjectileSpreading)),
-                ForceMode2D.Impulse);
+            projectileComponent.Rb.AddForce(GetProjectileForce(projectileComponent), ForceMode2D.Impulse);
             isReloaded = false;
         }
         isShooting = false;
+
         await UniTask.Delay(weaponData.ReloadTime);
+
         isReloaded = true;
         OnCanShoot?.Invoke();
 
+        Vector3 GetProjectileForce(Projectile projectile)
+        {
+            var forceDirection = transform.right;
+            var spreadingOffset = Random.Range(-weaponData.ProjectileSpreading, weaponData.ProjectileSpreading);
+            var ySpreading = new Vector3(0, spreadingOffset);
+            return forceDirection * projectile.ProjectileData.Speed + ySpreading;
+        }
     }
-
     public IEnumerator Rotate(Transform target, float weaponrotationSpeed)
     {
         Vector2 lookDir = target.position - transform.position;
