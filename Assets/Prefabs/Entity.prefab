@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892917473498081}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.924, y: -1.522, z: 0.000575874}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -48,21 +48,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRadius: {fileID: 3989892917589802081}
-  targetsQueue: []
-  movement: {fileID: 7030208246003873228}
-  myTeam: 2
-  unitData:
-    Health: 0
-    MaxHealth: 0
-    RegenerationAmount: 0
-    RegenerationSpeed: 0
-    RegenerationCooldown: 0
-    Armor: 0
-    Speed: 0
-    WeaponRotationSpeed: 0
   detectors:
   - {fileID: 3989892917589802081}
   - {fileID: 5593021579187249083}
+  targetsQueue: []
+  movement: {fileID: 7030208246003873228}
 --- !u!61 &985516727330841088
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -76,7 +66,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.2043245, y: -0.18710017}
+  m_Offset: {x: -0.0073938966, y: 0.014787674}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -87,7 +77,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5328345, y: 4.3445215}
+  m_Size: {x: 1.4884716, y: 4.22622}
   m_EdgeRadius: 0
 --- !u!114 &5593021579187249083
 MonoBehaviour:
@@ -129,7 +119,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892917589802094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.23, y: -1.67, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -180,7 +170,7 @@ GameObject:
   - component: {fileID: 5468286046819497568}
   - component: {fileID: 2912600857504723774}
   - component: {fileID: 2844227465313250503}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Entity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,7 +185,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892918609680285}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6919081, y: 1.5456573, z: 0.0354434}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -337,7 +327,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892919063522004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.05, y: -1.5012, z: -0.0354}
+  m_LocalPosition: {x: 1.11, y: 0, z: 0}
   m_LocalScale: {x: 2.687646, y: 0.38848996, z: 0.6269}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -412,7 +402,7 @@ MonoBehaviour:
   isStopped: 0
   projectile: {fileID: 855007886246829127, guid: dbc80e417707f6b4e93ee6aea1257869, type: 3}
   firePosition: {fileID: 3989892919162460386}
-  myTeam: 0
+  team: 0
   myEntityDetectors: []
 --- !u!50 &3989892919063521992
 Rigidbody2D:
@@ -491,7 +481,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6454318267670828213}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.21, y: -0.22, z: -0.036019273}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.4924717, y: 4.2538333, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

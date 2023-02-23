@@ -4,11 +4,14 @@ using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
 using Random = UnityEngine.Random;
+using Mathf = UnityEngine.Mathf;
+using static UnityEngine.GraphicsBuffer;
+using Unity.VisualScripting;
 
 public class Weapon : MonoBehaviour
 {
     public bool isStopped;
-    public event Action OnCanShoot;
+    public event Action<Member> OnCanShoot;
     [SerializeField] private Projectile projectile;    
     [SerializeField] private Transform firePosition;
     [SerializeField] private Team team;
@@ -44,12 +47,12 @@ public class Weapon : MonoBehaviour
         this.team = team;
         if (team == Team.SecondTeam)
         {
-            transform.localPosition += new Vector3(transform.localPosition.x, 0);
+            transform.localPosition = -new Vector3(transform.localPosition.x, 0);
             rb.rotation = 180;
         }
     }    
     public void ResetStates(bool isShooting = false, bool isReloaded = true, bool isStopped = false) { }    
-    public async void Shoot()
+    public async void Shoot(Member member)
     {
         if (isShooting || !isReloaded)
             return;
@@ -62,17 +65,26 @@ public class Weapon : MonoBehaviour
                 return;
 
             await UniTask.Delay(weaponData.ShootCooldown);
-             
+            
             var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
 
             var projectileComponent = projectile.GetComponent<Projectile>();
-            projectileComponent.InitStats(projectileData, chance.Spin(), myEntityDetectors, team);
+            var data = projectileData.GetProjectileData();
+            float speed = data.Speed;
+            float distance = Vector3.Distance(firePosition.position, member.transform.position);
+            float time = distance / data.Speed;
+            Debug.Log(distance);
+            Debug.Log(distance);
+            Debug.Log(projectileComponent.ProjectileData.Speed);
+            Debug.Log(Mathf.RoundToInt(time));
+            projectileComponent.InitStats(data, chance.Spin(), myEntityDetectors, team, Mathf.RoundToInt(time * 1000));
             projectileComponent.OnLifeTimeEnded += (projectile) => 
             {
                 projectile.ClearAllSubsribations();
                 projectilePool.Destroy(projectile.gameObject);
             };
             projectileComponent.Rb.AddForce(GetProjectileForce(projectileComponent), ForceMode2D.Impulse);
+            
             isReloaded = false;
         }
         isShooting = false;
@@ -80,17 +92,17 @@ public class Weapon : MonoBehaviour
         await UniTask.Delay(weaponData.ReloadTime);
 
         isReloaded = true;
-        OnCanShoot?.Invoke();
+        OnCanShoot?.Invoke(member);
 
         Vector3 GetProjectileForce(Projectile projectile)
         {
             var forceDirection = transform.right;
             var spreadingOffset = Random.Range(-weaponData.ProjectileSpreading, weaponData.ProjectileSpreading);
-            var ySpreading = new Vector3(0, spreadingOffset);
-            return forceDirection * projectile.ProjectileData.Speed + ySpreading;
+            var spreading = new Vector3(0, spreadingOffset);
+            return forceDirection * projectile.ProjectileData.Speed + spreading;
         }
     }
-    public IEnumerator Rotate(Transform target, float weaponrotationSpeed)
+    public IEnumerator Rotate(Transform target, float weaponrotationSpeed, Member member)
     {
         Vector2 lookDir = target.position - transform.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg;
@@ -101,6 +113,6 @@ public class Weapon : MonoBehaviour
             rb.rotation = step;
             yield return null;
         }
-        OnCanShoot?.Invoke();
+        OnCanShoot?.Invoke(member);
     }
 }

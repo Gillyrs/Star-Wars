@@ -69,7 +69,7 @@ public class Unit : Member
         isBusy = true;
         weapon.isStopped = false;
         member.OnMemberDestroyed += MemberDestroyed;
-        StartCoroutine(weapon.Rotate(member.transform, unitData.WeaponRotationSpeed));
+        StartCoroutine(weapon.Rotate(member.transform, unitData.WeaponRotationSpeed, member));
     }
     private void MemberDestroyed(Member member)
     {

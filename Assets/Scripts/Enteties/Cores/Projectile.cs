@@ -12,26 +12,27 @@ public class Projectile : MonoBehaviour
     [SerializeField] private TriggerDetector detector;
     [SerializeField] private List<Detector> myEntityDetectors;
     [SerializeField] private Team myTeam;
-    public void InitStats(ProjectileData projectileData, bool isMissing, List<Detector> myEntityDetectors, Team team)
+    public void InitStats(ProjectileDataStructure projectileData, bool isReaching, List<Detector> myEntityDetectors, Team team, int lifeTime)
     {
         myTeam = team;
-        ProjectileData = projectileData.GetProjectileData();
-        this.myEntityDetectors = myEntityDetectors.ToList();        
-        if (isMissing == false)
-            detector.OnColliderEnter += Damage;  
-        Activate();
+        ProjectileData = projectileData;
+        this.myEntityDetectors = myEntityDetectors.ToList();
+        if (isReaching)
+            Activate(lifeTime);//detector.OnColliderEnter += Damage;  
+        else
+            Activate(ProjectileData.LifeTime);
     }
 
     public void ClearAllSubsribations()
     {
         OnLifeTimeEnded = null;
     }
-    private async void Activate()
+    private async void Activate(int lifeTime)
     {
-        await UniTask.Delay(ProjectileData.LifeTime);
+        await UniTask.Delay(lifeTime);
         OnLifeTimeEnded?.Invoke(this);
     }
-    private void Damage(Collider2D collider)
+    /*private void Damage(Collider2D collider)
     {
         if (!collider.TryGetComponent(out Detector detector))
             return;
@@ -47,16 +48,16 @@ public class Projectile : MonoBehaviour
 
         if (member.TeamEquals(myTeam) || !gameObject.activeSelf)
             return;
-        Debug.Log(gameObject.activeSelf);
+        Debug.Log("BULLET REACHED at " + DateTime.Now + ":" + DateTime.Now.Millisecond + " type PROJ");
         member.TakeDamage(ProjectileData.Damage);
         OnLifeTimeEnded?.Invoke(this);
-    }
+    }*/
 
     private void OnDisable()
     {
         myEntityDetectors.Clear();
         Rb.velocity = Vector3.zero;
         Rb.angularVelocity = 0;
-        detector.OnColliderEnter -= Damage;
+        //detector.OnColliderEnter -= Damage;
     }
 }

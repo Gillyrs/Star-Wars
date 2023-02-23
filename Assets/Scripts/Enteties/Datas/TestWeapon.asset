@@ -16,4 +16,4 @@ MonoBehaviour:
   projectileSpreading: 0.35
   reloadTime: 3161
   shootCooldown: 198
-  machineQueue: 14
+  machineQueue: 1
