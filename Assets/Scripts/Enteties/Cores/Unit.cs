@@ -55,35 +55,21 @@ public class Unit : Member
     }
     private void Attack(Member member)
     {
-        if (ShouldIgnoreMember(member))
+        if (member.TeamEquals(team) || !member.gameObject.activeInHierarchy)
             return;
         if (isBusy)
         {
             if (targetsQueue.Contains(member))
                 return;
-            AddMemberToQueue(member);
-            return;
-        }
-        StartAttacking(member);
-
-        
-        void StartAttacking(Member member)
-        {
-            movement.MoveToFightingState();
-            isBusy = true;
-            weapon.isStopped = false;
-            member.OnMemberDestroyed += MemberDestroyed;
-            StartCoroutine(weapon.Rotate(member.transform, unitData.WeaponRotationSpeed));
-        }
-        void AddMemberToQueue(Member member)
-        {
             targetsQueue.Add(member);
             member.OnMemberDestroyed += MemberInQueueDestroyed;
+            return;
         }
-        bool ShouldIgnoreMember(Member member)
-        {
-            return member.TeamEquals(team) || !member.gameObject.activeInHierarchy;
-        }
+        movement.MoveToFightingState();
+        isBusy = true;
+        weapon.isStopped = false;
+        member.OnMemberDestroyed += MemberDestroyed;
+        StartCoroutine(weapon.Rotate(member.transform, unitData.WeaponRotationSpeed));
     }
     private void MemberDestroyed(Member member)
     {

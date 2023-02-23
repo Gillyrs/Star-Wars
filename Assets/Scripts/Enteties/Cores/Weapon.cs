@@ -35,29 +35,14 @@ public class Weapon : MonoBehaviour
         this.weaponData = weaponData.GetWeaponData();
         this.projectileData = projectileData;
 
-        InitChance();
-        InitDetectors(detectors);
-        InitTeam(team);
+        int[] chances = new int[] { this.weaponData.Accuracy, 100 - this.weaponData.Accuracy };
+        bool[] bools = new bool[] { true, false };
+        chance = new Chance(new ChanceStructure(chances, bools));
 
-        void InitChance()
-        {
-            int[] chances = new int[] { this.weaponData.Accuracy, 100 - this.weaponData.Accuracy };
-            bool[] bools = new bool[] { true, false };
-            chance = new Chance(new ChanceStructure(chances, bools));
-        }
-        void InitDetectors(List<Detector> detectors)
-        {
-            myEntityDetectors = detectors;
-        }
-        void InitTeam(Team team)
-        {
-            this.team = team;
-            if (team == Team.SecondTeam)
-            {
-                FlipTransformAndRotation();
-            }
-        }
-        void FlipTransformAndRotation()
+        myEntityDetectors = detectors;
+
+        this.team = team;
+        if (team == Team.SecondTeam)
         {
             transform.localPosition += new Vector3(transform.localPosition.x, 0);
             rb.rotation = 180;
