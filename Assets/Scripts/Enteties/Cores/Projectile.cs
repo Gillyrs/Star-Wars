@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Linq;
+using Random = UnityEngine.Random;
 public class Projectile : MonoBehaviour
 {
     public ProjectileDataStructure ProjectileData;
@@ -11,52 +12,38 @@ public class Projectile : MonoBehaviour
     public Rigidbody2D Rb;
     [SerializeField] private TriggerDetector detector;
     [SerializeField] private List<Detector> myEntityDetectors;
-    [SerializeField] private Team myTeam;
-    public void InitStats(ProjectileData projectileData, bool isMissing, List<Detector> myEntityDetectors, Team team)
+    public void InitStats(ProjectileDataStructure projectileData, Member member, bool isReaching, int lifeTime)
     {
-        myTeam = team;
-        ProjectileData = projectileData.GetProjectileData();
-        this.myEntityDetectors = myEntityDetectors.ToList();        
-        if (isMissing == false)
-            detector.OnColliderEnter += Damage;  
-        Activate();
+        ProjectileData = projectileData;
+        this.myEntityDetectors = myEntityDetectors.ToList();
+        if (isReaching)
+            Activate(member, lifeTime);
+        else
+            Activate(null, ProjectileData.LifeTime);
     }
 
     public void ClearAllSubsribations()
     {
         OnLifeTimeEnded = null;
     }
-    private async void Activate()
+    private async void Activate(Member member, int lifeTime)
     {
-        await UniTask.Delay(ProjectileData.LifeTime);
-        OnLifeTimeEnded?.Invoke(this);
-    }
-    private void Damage(Collider2D collider)
-    {
-        if (!collider.TryGetComponent(out Detector detector))
+        if (member == null)
+        {
+            await UniTask.Delay(lifeTime);
+            OnLifeTimeEnded?.Invoke(this);
+            Debug.Log("MISS");
             return;
-
-        if (myEntityDetectors.Contains(detector))
-            return;
-
-        if (!(detector is CollisionDetector collisionDetector))
-            return;
-
-        if (!collisionDetector.TryGetMember(out Member member))
-            return;
-
-        if (member.TeamEquals(myTeam) || !gameObject.activeSelf)
-            return;
-        Debug.Log(gameObject.activeSelf);
+        }
+        await UniTask.Delay(lifeTime);
         member.TakeDamage(ProjectileData.Damage);
+        Debug.Log("DAMAGE");
         OnLifeTimeEnded?.Invoke(this);
     }
-
     private void OnDisable()
     {
         myEntityDetectors.Clear();
         Rb.velocity = Vector3.zero;
         Rb.angularVelocity = 0;
-        detector.OnColliderEnter -= Damage;
     }
 }

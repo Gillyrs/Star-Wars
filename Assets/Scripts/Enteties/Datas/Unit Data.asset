@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   maxHealth: 100
-  regenerationAmount: 72
-  regenerationSpeed: 59
-  regenerationCooldown: 67
+  regenerationAmount: 12
+  regenerationSpeed: 1000
+  regenerationCooldown: 5000
   armor: 100
   speed: 2.13
   weaponRotationSpeed: 100

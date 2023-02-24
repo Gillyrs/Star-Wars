@@ -13,8 +13,9 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Transform firePosition;
     [SerializeField] private Team team;
     [SerializeField] private List<Detector> myEntityDetectors;
-    private bool isShooting = false;
-    private bool isReloaded = true;
+    [SerializeField] public bool isShooting = false;
+    [SerializeField] public bool isReloaded = true;
+    [SerializeField] private Member currentTarget;
 
     private ProjectileData projectileData;
     private IObjectPool projectilePool;
@@ -48,25 +49,35 @@ public class Weapon : MonoBehaviour
             rb.rotation = 180;
         }
     }    
-    public void ResetStates(bool isShooting = false, bool isReloaded = true, bool isStopped = false) { }    
-    public async void Shoot()
+    public async void Shoot(Member member)
     {
         if (isShooting || !isReloaded)
             return;
 
+        Debug.Log("SHOOOOOOOOOOTING");
         isShooting = true;
-
+        currentTarget = member;
         for (int i = 0; i < weaponData.MachineQueue; i++)
         {
-            if(isStopped)
+            
+            if (isStopped)
+            {
+                isShooting = false;
                 return;
+            }
 
             await UniTask.Delay(weaponData.ShootCooldown);
              
             var projectile = projectilePool.Instantiate(firePosition.position, new Quaternion());
 
             var projectileComponent = projectile.GetComponent<Projectile>();
-            projectileComponent.InitStats(projectileData, chance.Spin(), myEntityDetectors, team);
+
+            var data = projectileData.GetProjectileData();
+            float speed = data.Speed;
+            float distance = Vector3.Distance(firePosition.position, member.transform.position);
+            float time = distance / data.Speed;
+
+            projectileComponent.InitStats(data, member, chance.Spin(), Mathf.RoundToInt(time * 1000));
             projectileComponent.OnLifeTimeEnded += (projectile) => 
             {
                 projectile.ClearAllSubsribations();

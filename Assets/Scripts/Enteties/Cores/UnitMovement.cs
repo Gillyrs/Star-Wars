@@ -14,9 +14,13 @@ public class UnitMovement : MonoBehaviour
     public void MoveToFightingState()
     {
         aiLerp.isStopped = true;
+        aiLerp.enabled = false;
+        return;
     }
     public void MoveToRunningState()
     {
         aiLerp.isStopped = false;
+        aiLerp.enabled = true;
+        return;
     }
 }

@@ -13,7 +13,7 @@ public class Detector : MonoBehaviour
     public bool HasMember;
     [ShowIf("HasMember")]
     [SerializeField] private Member member;
-
+    
     public void ClearAllSubsribations()
     {
         OnColliderEnter = null;
@@ -28,7 +28,7 @@ public class Detector : MonoBehaviour
     
 
     protected void InvokeOnColliderEnter(Collider2D collider) => OnColliderEnter?.Invoke(collider);
-    protected void InvokeOnColliderExit(Collider2D collider) => OnColliderEnter?.Invoke(collider);
+    protected void InvokeOnColliderExit(Collider2D collider) => OnColliderExit?.Invoke(collider);
     protected void InvokeOnCollisionEnter(Collision2D collision) => OnCollisionEnter?.Invoke(collision);
-    protected void InvokeOnCollisionExit(Collision2D collision) => OnCollisionEnter?.Invoke(collision);
+    protected void InvokeOnCollisionExit(Collision2D collision) => OnCollisionExit?.Invoke(collision);
 }

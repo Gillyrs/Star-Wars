@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 
 public class Unit : Member
 {
@@ -10,7 +11,8 @@ public class Unit : Member
     [SerializeField] private TriggerDetector attackRadius;
     [SerializeField] private List<Detector> detectors;
     [SerializeField] private List<Member> targetsQueue = new();
-    [SerializeField] private UnitMovement movement;    
+    [SerializeField] private UnitMovement movement;
+    [SerializeField] private GameObject regenerationSign;
     private bool isBusy = false;
     private bool isRegenerating = false;
     private bool isInitialized;
@@ -18,6 +20,7 @@ public class Unit : Member
     private Weapon weapon;
     private Entity entity;
     private UnitDataStructure unitData;
+    private Member currentTarget;
 
     private void Awake()
     {
@@ -32,7 +35,7 @@ public class Unit : Member
 
         weapon = entity.GetWeapon();       
         weapon.Init(weaponData, projectileData, this.team, detectors);
-        weapon.OnCanShoot += weapon.Shoot;
+        weapon.OnCanShoot += Shoot;
 
         movement.SetDestination(enemyBase);
         
@@ -44,10 +47,10 @@ public class Unit : Member
             return;
 
         weapon.isStopped = true;
-        weapon.OnCanShoot -= weapon.Shoot;
-        weapon.ResetStates();
+        weapon.isReloaded = true;
+        weapon.OnCanShoot -= Shoot;
 
-        OnMemberDestroyed?.Invoke(this);
+        
         isBusy = false;
 
         targetsQueue.Clear();
@@ -65,27 +68,43 @@ public class Unit : Member
             member.OnMemberDestroyed += MemberInQueueDestroyed;
             return;
         }
+        StopCoroutine(StartRegeneraion());
         movement.MoveToFightingState();
-        isBusy = true;
+
+        isBusy = true;      
         weapon.isStopped = false;
+        currentTarget = member;
         member.OnMemberDestroyed += MemberDestroyed;
         StartCoroutine(weapon.Rotate(member.transform, unitData.WeaponRotationSpeed));
     }
-    private void MemberDestroyed(Member member)
+    private void Shoot()
     {
-        movement.MoveToRunningState();
-        weapon.ResetStates(isStopped: true);
+        weapon.Shoot(currentTarget);
+    }
+    private async void MemberDestroyed(Member member)
+    {
+        if (!member.gameObject.activeInHierarchy)
+            return;
+        weapon.isStopped = true;
+        movement.MoveToRunningState();        
 
         member.OnMemberDestroyed -= MemberDestroyed;
         isBusy = false;
 
         if (TryGetTarget(out Member newMember))
+        {
             Attack(newMember);
+        }
+        else if (gameObject.activeInHierarchy)
+        {
+            await UniTask.Delay(unitData.RegenerationCooldown);
+            StartCoroutine(StartRegeneraion());
+        }
     }
     private void MemberInQueueDestroyed(Member member)
     {
-        targetsQueue.Remove(member);
-        
+        member.OnMemberDestroyed -= MemberInQueueDestroyed;
+        targetsQueue.Remove(member);       
     }
     private bool TryGetTarget(out Member member)
     {
@@ -115,18 +134,17 @@ public class Unit : Member
     }
     public override void TakeDamage(int damage)
     {
+        
         unitData.Armor -= damage;
         int hasArmor = Convert.ToInt32(unitData.Armor >= 0);
 
         unitData.Health += unitData.Armor * (1 - hasArmor);
         unitData.Armor *= hasArmor;
-
         if (unitData.Health <= 0)
         {
             Die();
             return;
-        }
-        StartCoroutine(StartRegeneraion());
+        }           
     }
     public override bool TeamEquals(Team team)
     {
@@ -134,22 +152,32 @@ public class Unit : Member
     }
 
     private void Die()
-    {   
+    {
+        OnMemberDestroyed?.Invoke(this);
         entity.gameObject.SetActive(false);
     }
 
     private IEnumerator StartRegeneraion()
     {
-        while (unitData.Health != unitData.MaxHealth)
+        if (isRegenerating || unitData.Health == unitData.MaxHealth || isBusy)
+            yield break;
+        regenerationSign.SetActive(true);
+        isRegenerating = true;
+
+        while (true)
         {
             if (unitData.Health + unitData.RegenerationAmount >= unitData.MaxHealth)
             {
                 unitData.Health = 100;
-                StopCoroutine(StartRegeneraion());
+                regenerationSign.SetActive(false);
+                isRegenerating = false;
+                yield break;
             }
             else
+            {
                 unitData.Health += unitData.RegenerationAmount;
-            yield return new WaitForSeconds(unitData.RegenerationSpeed);
+            }
+            yield return new WaitForSeconds(unitData.RegenerationSpeed / 1000);
         }
     }
 }
