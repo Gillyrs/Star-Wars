@@ -1,26 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Pathfinding;
+using Pathfinding.RVO;
 
 public class UnitMovement : MonoBehaviour
 {
-    [SerializeField] private AILerp aiLerp;
-    
-    public void SetDestination(Transform target)
+    [SerializeField] private RVOController controller;
+    private bool locked;
+    private void Update()
     {
-        aiLerp.destination = target.position;
+        if (!locked)
+        {
+            var delta = controller.CalculateMovementDelta(transform.position, Time.deltaTime);
+            transform.position = transform.position + delta;
+        }
+
+    }
+    public void SetDestination(Transform target, float speed)
+    {
+        controller.SetTarget(target.position, speed, speed);
+        
     }
     public void MoveToFightingState()
     {
-        aiLerp.isStopped = true;
-        aiLerp.enabled = false;
+        locked = true;
         return;
     }
     public void MoveToRunningState()
     {
-        aiLerp.isStopped = false;
-        aiLerp.enabled = true;
+        locked = false;
         return;
     }
 }

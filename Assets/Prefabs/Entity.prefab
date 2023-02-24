@@ -111,7 +111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892917473498081}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.924, y: -1.522, z: 0.000575874}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -133,34 +133,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackRadius: {fileID: 3989892917589802081}
-  targetsQueue: []
-  movement: {fileID: 7030208246003873228}
-  myTeam: 2
-  unitData:
-    Health: 0
-    MaxHealth: 0
-    RegenerationAmount: 0
-    RegenerationSpeed: 0
-    RegenerationCooldown: 0
-    Armor: 0
-    Speed: 0
-    WeaponRotationSpeed: 0
   detectors:
   - {fileID: 3989892917589802081}
   - {fileID: 5593021579187249083}
   targetsQueue: []
   movement: {fileID: 7030208246003873228}
   regenerationSign: {fileID: 3481365636327618988}
-  unitData:
-    Health: 0
-    MaxHealth: 0
-    RegenerationAmount: 0
-    RegenerationSpeed: 0
-    RegenerationCooldown: 0
-    Armor: 0
-    Speed: 0
-    WeaponRotationSpeed: 0
-  currentTarget: {fileID: 0}
 --- !u!61 &985516727330841088
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -174,7 +152,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -1.2043245, y: -0.18710017}
+  m_Offset: {x: -0.0019273162, y: -0.015329242}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -185,7 +163,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5328345, y: 4.3445215}
+  m_Size: {x: 1.4880251, y: 4.2698383}
   m_EdgeRadius: 0
 --- !u!114 &5593021579187249083
 MonoBehaviour:
@@ -227,7 +205,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892917589802094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.23, y: -1.67, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -275,8 +253,7 @@ GameObject:
   - component: {fileID: 3989892918609680286}
   - component: {fileID: -3548230531547062485}
   - component: {fileID: 7030208246003873228}
-  - component: {fileID: 5468286046819497568}
-  - component: {fileID: 2912600857504723774}
+  - component: {fileID: 3678710250103778497}
   - component: {fileID: 2844227465313250503}
   m_Layer: 0
   m_Name: Entity
@@ -293,7 +270,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892918609680285}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.6919081, y: 1.5456573, z: 0.0354434}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -329,8 +306,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c89e2edeff29534aa18e3996abdfbd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aiLerp: {fileID: 2912600857504723774}
---- !u!114 &5468286046819497568
+  controller: {fileID: 3678710250103778497}
+--- !u!114 &3678710250103778497
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -339,54 +316,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 3989892918609680285}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Script: {fileID: 11500000, guid: 560112f876f5746c780eca0d404e7139, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 1
-  drawGizmos: 1
-  detailedGizmos: 0
-  startEndModifier:
-    addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
-    useRaycasting: 0
-    mask:
-      serializedVersion: 2
-      m_Bits: 4294967295
-    useGraphRaycasting: 0
-  traversableTags: -1
-  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  graphMask:
-    value: -1
---- !u!114 &2912600857504723774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3989892918609680285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847a14d4dc9cc43679ab34fc78e0182f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 4
-  autoRepath:
-    mode: 2
-    interval: 0.5
-    sensitivity: 10
-    maximumInterval: 2
-    visualizeSensitivity: 0
-  canMove: 1
-  speed: 3
-  orientation: 1
-  enableRotation: 0
-  rotationSpeed: 10
-  interpolatePathSwitches: 1
-  switchPathInterpolationSpeed: 5
-  targetCompatibility: {fileID: 0}
-  repathRateCompatibility: NaN
-  canSearchCompability: 0
+  version: 2
+  radiusBackingField: 1
+  heightBackingField: 3.25
+  centerBackingField: 0
+  locked: 0
+  lockWhenNotMoving: 0
+  agentTimeHorizon: 2
+  obstacleTimeHorizon: 2
+  maxNeighbours: 30
+  layer: 1
+  collidesWith: -1
+  wallAvoidForce: 1
+  wallAvoidFalloff: 1
+  priority: 0.5
+  debug: 0
 --- !u!50 &2844227465313250503
 Rigidbody2D:
   serializedVersion: 4
@@ -404,7 +351,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -419,7 +366,7 @@ GameObject:
   - component: {fileID: 3989892919063522006}
   - component: {fileID: 3989892919063522007}
   - component: {fileID: 3989892919063522005}
-  - component: {fileID: 3989892919063521992}
+  - component: {fileID: 8844785048682205823}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -435,7 +382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989892919063522004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.05, y: -1.5012, z: -0.0354}
+  m_LocalPosition: {x: 1, y: 0.04, z: -0.0354}
   m_LocalScale: {x: 2.687646, y: 0.38848996, z: 0.6269}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -510,12 +457,12 @@ MonoBehaviour:
   isStopped: 0
   projectile: {fileID: 855007886246829127, guid: dbc80e417707f6b4e93ee6aea1257869, type: 3}
   firePosition: {fileID: 3989892919162460386}
-  myTeam: 0
+  team: 0
   myEntityDetectors: []
   isShooting: 0
   isReloaded: 1
   currentTarget: {fileID: 0}
---- !u!50 &3989892919063521992
+--- !u!50 &8844785048682205823
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -592,7 +539,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6454318267670828213}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.21, y: -0.22, z: -0.036019273}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.4924717, y: 4.2538333, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

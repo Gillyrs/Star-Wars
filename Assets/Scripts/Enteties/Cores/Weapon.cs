@@ -45,7 +45,7 @@ public class Weapon : MonoBehaviour
         this.team = team;
         if (team == Team.SecondTeam)
         {
-            transform.localPosition += new Vector3(transform.localPosition.x, 0);
+            transform.localPosition = -new Vector3(transform.localPosition.x, 0);
             rb.rotation = 180;
         }
     }    

@@ -37,7 +37,7 @@ public class Unit : Member
         weapon.Init(weaponData, projectileData, this.team, detectors);
         weapon.OnCanShoot += Shoot;
 
-        movement.SetDestination(enemyBase);
+        movement.SetDestination(enemyBase, this.unitData.Speed);
         
         attackRadius.OnColliderEnter += HandleColliderEnter;
     }
@@ -98,7 +98,8 @@ public class Unit : Member
         else if (gameObject.activeInHierarchy)
         {
             await UniTask.Delay(unitData.RegenerationCooldown);
-            StartCoroutine(StartRegeneraion());
+            if (gameObject.activeInHierarchy)
+                StartCoroutine(StartRegeneraion());
         }
     }
     private void MemberInQueueDestroyed(Member member)

@@ -18,5 +18,5 @@ MonoBehaviour:
   regenerationSpeed: 1000
   regenerationCooldown: 5000
   armor: 100
-  speed: 2.13
+  speed: 4.04
   weaponRotationSpeed: 100
